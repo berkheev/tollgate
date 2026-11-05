@@ -1,0 +1,30 @@
+listen: ":8090"
+backend: redis
+failure_mode: open
+backend_timeout: 100ms
+shutdown_timeout: 15s
+
+redis:
+  url: redis://localhost:6379/0
+  key_prefix: tollgate
+
+log:
+  level: info
+  format: json
+
+rules:
+  # General API traffic per user: sustained 100/min, short bursts of 20.
+  api_per_user: token_bucket 100/min burst 20
+
+  # Brute-force protection. Exact counting matters more than memory here.
+  login_attempts: sliding_log 5/15m
+
+  search_per_ip: sliding_window 30/10s
+
+  # Expensive report exports, cost = number of reports requested.
+  exports_per_account:
+    algorithm: fixed_window
+    limit: 20
+    window: 1h
+
+  webhooks_per_tenant: token_bucket 50/s burst 100
