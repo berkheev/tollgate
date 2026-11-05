@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: tollgate
+    static_configs:
+      - targets: ["tollgate:8090", "tollgate-2:8090"]

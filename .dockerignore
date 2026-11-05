@@ -1,0 +1,9 @@
+.git
+.github
+docs
+deploy
+loadtest
+*.md
+*.test
+*.out
+bin/
